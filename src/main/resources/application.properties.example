@@ -6,10 +6,13 @@ server.port=8080
 spring.datasource.password=your password
 spring.datasource.username=your username
 spring.datasource.url=jdbc:postgresql://localhost:5432/(database name)
+spring.jpa.hibernate.ddl-auto=update
 
 # -------------- AI config -------------- #
 
 spring.ai.openai.api-key=your value here
 spring.ai.vectorstore.pgvector.initialize-schema=true
+spring.ai.openai.chat.options.model=gpt-3.5-turbo
+spring.ai.openai.embedding.options.model=text-embedding-ada-002
 
 # -------------- Token config -------------- #
