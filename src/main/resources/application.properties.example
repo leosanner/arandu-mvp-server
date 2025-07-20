@@ -1,0 +1,15 @@
+spring.application.name=arandu-mvp-server
+server.port=8080
+
+# -------------- DB config -------------- #
+
+spring.datasource.password=your password
+spring.datasource.username=your username
+spring.datasource.url=jdbc:postgresql://localhost:5432/(database name)
+
+# -------------- AI config -------------- #
+
+spring.ai.openai.api-key=your value here
+spring.ai.vectorstore.pgvector.initialize-schema=true
+
+# -------------- Token config -------------- #
