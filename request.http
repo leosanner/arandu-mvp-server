@@ -8,3 +8,19 @@ Content-Type: application/json
   "password": "SenhaSecreta1234",
   "username": "leosander12"
 }
+
+###
+
+POST http://localhost:8080/event/
+Content-Type: application/json
+
+{
+  "day": 20,
+  "month": 1,
+  "hour": 22,
+  "minute": 50,
+  "year": 2024,
+  "description": "Simple event for friends",
+  "name": "Friends Reunion",
+  "userEmail": "leonardo@email.com"
+}

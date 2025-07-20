@@ -1,7 +1,7 @@
 package dev.leonardosanner.arandu_mvp_server.controller;
 
-import dev.leonardosanner.arandu_mvp_server.model.dto.CreateUserDTO;
-import dev.leonardosanner.arandu_mvp_server.service.user.UserService;
+import dev.leonardosanner.arandu_mvp_server.model.dto.CreateEventDTO;
+import dev.leonardosanner.arandu_mvp_server.service.event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/event")
+public class EventController {
 
     @Autowired
-    private UserService userService;
+    private EventService eventService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createUser(@RequestBody CreateUserDTO createUserDTO){
-        return userService.createUser(createUserDTO);
+    public ResponseEntity<Object> createEvent(@RequestBody CreateEventDTO createEventDTO) {
+
+        return this.eventService.createEvent(createEventDTO);
     }
 }

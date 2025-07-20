@@ -15,12 +15,14 @@ public class CreateUserUseCase {
     }
 
     public void execute(CreateUserDTO createUserDTO){
-        this.userRepository.findByName(createUserDTO.getUsername()).
+        System.out.println("User email request: " + createUserDTO.getEmail());
+        this.userRepository.findByEmail(createUserDTO.getEmail()).
                 ifPresent(user -> {
+                    System.out.println("Exists");
                     throw new RuntimeException("user already exists");
                 });
 
-        String fullName = createUserDTO.getUsername() + " " + createUserDTO.getLastName();
+        String fullName = createUserDTO.getFirstName() + " " + createUserDTO.getLastName();
 
         UserEntity newUser = UserEntity.builder()
                 .name(fullName)
