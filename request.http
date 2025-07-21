@@ -13,19 +13,18 @@ Content-Type: application/json
 
 ###
 
-
 # @name createEvent
 POST http://localhost:8080/event/
 Content-Type: application/json
 
 {
-  "day": 20,
-  "month": 1,
-  "hour": 22,
+  "day": 1,
+  "month": 9,
+  "hour": 23,
   "minute": 50,
-  "year": 2024,
-  "description": "Simple event for friends",
-  "name": "Friends Reunion",
+  "year": 2025,
+  "description": "Important Meeting migrations using JavaScrypt",
+  "name": "Meeting with Ronaldo",
   "userEmail": "leonardo@email.com"
 }
 
@@ -35,3 +34,8 @@ Content-Type: application/json
 @userEmail = leonardo@email.com
 
 GET http://localhost:8080/event/{{userEmail}}
+
+###
+
+POST http://localhost:8080/ai/{{userEmail}}
+
