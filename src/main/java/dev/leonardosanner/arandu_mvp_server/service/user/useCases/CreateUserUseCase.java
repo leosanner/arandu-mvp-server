@@ -15,10 +15,8 @@ public class CreateUserUseCase {
     }
 
     public void execute(CreateUserDTO createUserDTO){
-        System.out.println("User email request: " + createUserDTO.getEmail());
         this.userRepository.findByEmail(createUserDTO.getEmail()).
                 ifPresent(user -> {
-                    System.out.println("Exists");
                     throw new RuntimeException("user already exists");
                 });
 
