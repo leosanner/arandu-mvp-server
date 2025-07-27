@@ -20,6 +20,7 @@ public class AIMessageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String prompt;
+    private String promptUser;
+    private String promptSystem;
     private String response;
 }

@@ -1,8 +1,5 @@
 package dev.leonardosanner.arandu_mvp_server.service.ai.useCases;
 
-// Receive a list of events and return a prompt to instruct the
-// model to plan the user lif until the event
-
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserEventInfoDTO;
 import dev.leonardosanner.arandu_mvp_server.service.event.useCases.FindUserEventsUseCase;
 import org.springframework.stereotype.Service;
@@ -22,14 +19,15 @@ public class UserEventsPlannerPromptUseCase {
         this.findUserEventsUseCase = findUserEventsUseCase;
     }
 
-    public String execute(String userEmail) {
+    public HashMap<String, String> execute(String userEmail) {
         List<UserEventInfoDTO> userEventsInformation = this.findUserEventsUseCase.execute(userEmail);
-        String prompt;
+        HashMap<String, String> promptHash = new HashMap<>();
 
         if (userEventsInformation.isEmpty()) {
-            prompt = "You do not have any event registered, you must have at least one to access this resource";
 
-            throw new RuntimeException(prompt);
+            throw new RuntimeException(
+                    "You do not have any event registered, you must have at least one to access this resource"
+            );
         }
 
         AtomicInteger count = new AtomicInteger(1);
@@ -41,7 +39,12 @@ public class UserEventsPlannerPromptUseCase {
                 }
         ).collect(Collectors.joining("\n"));
 
-         prompt = "You must provide a detailed plan for the user based on the events listed below.\n\n" +
+        String systemPrompt = "You are an assistant specialized in creating detailed user plans based on event data. " +
+                "Your role is to provide clear, practical, and helpful guidance to help users prepare effectively " +
+                "for their upcoming events.";
+
+
+        String userPrompt = "You must provide a detailed plan for the user based on the events listed below.\n\n" +
                 "Each event is represented as a set of key=value pairs in a hash/map format, corresponding to a specific event.\n\n" +
                 "The plan should include:\n" +
                 "- How the user can prepare for each event,\n" +
@@ -50,14 +53,16 @@ public class UserEventsPlannerPromptUseCase {
                 "- A suggested timeline indicating how many days in advance the user should start preparing,\n" +
                 "- Resources or tools that might help the user get ready for each event.\n\n" +
                 "Be a helpful guide, offering clear and practical advice tailored to each event.\n\n" +
-                 "After providing the detailed plans for each event," +
-                 "give a concise summary highlighting the most important points the user should keep in mind overall" +
-                 "and the timeline for each event.\n\n" +
+                "After providing the detailed plans for each event, give a concise summary highlighting the most important points " +
+                "the user should keep in mind overall and the timeline for each event.\n\n" +
+                "The language you should answer should be the same as the events are informed.\n\n" +
                 "Here are the events:\n\n" +
                 promptUserInformation;
 
+        promptHash.put("system", systemPrompt);
+        promptHash.put("user", userPrompt);
 
-        return prompt;
+        return promptHash;
     }
 
     private HashMap<String, String> getAttributesInformation(UserEventInfoDTO userEventInfoDTO) {

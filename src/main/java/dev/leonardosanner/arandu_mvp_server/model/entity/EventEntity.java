@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,10 +21,12 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private LocalDateTime eventStartDate;
 
     private LocalDateTime eventEndDate;
 
+    @NotNull
     private String name;
 
     private String description;
@@ -33,6 +36,7 @@ public class EventEntity {
     private LabelEntity label;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name= "user_id")
     private UserEntity user;
 

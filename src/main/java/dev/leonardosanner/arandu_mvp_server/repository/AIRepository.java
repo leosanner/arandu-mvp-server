@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface AIRepository extends JpaRepository<AIMessageEntity, Long> {
 
-    List<AIMessageEntity> findByPromptContainingIgnoreCase(String prompt);
+    List<AIMessageEntity> findByPromptUserContainingIgnoreCase(String prompt);
 }

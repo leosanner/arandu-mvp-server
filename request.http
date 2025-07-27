@@ -24,7 +24,7 @@ Content-Type: application/json
   "minute": 50,
   "year": 2025,
   "description": "Important Meeting migrations using JavaScrypt",
-  "name": "Meeting with Ronaldo",
+  "name": "New AI tools",
   "userEmail": "leonardo@email.com"
 }
 

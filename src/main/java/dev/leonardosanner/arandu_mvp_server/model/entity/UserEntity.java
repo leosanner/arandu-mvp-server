@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Entity
@@ -22,10 +24,14 @@ public class UserEntity {
     private Long id;
 
     @Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ ]+$\n")
+    @NotNull
     private String name;
 
     @Email
+    @NotNull
     private String email;
 
+    @Length(min = 10)
+    @NotNull
     private String password;
 }

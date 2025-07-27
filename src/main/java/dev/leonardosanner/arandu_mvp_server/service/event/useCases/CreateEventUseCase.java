@@ -25,7 +25,7 @@ public class CreateEventUseCase {
         // TODO: Add option to determine the end of the event "plus".
 
         // check if user exists
-        // TODO: In future steps, user will be authenticated
+        // TODO: In future steps, user will be authenticated -> use auth userUseCase
 
         UserEntity userEntity = this.userRepository.findByEmail(createEventDTO.getUserEmail()).
                 orElseThrow(() -> new RuntimeException("User not founded"));
