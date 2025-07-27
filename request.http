@@ -39,3 +39,18 @@ GET http://localhost:8080/event/{{userEmail}}
 
 POST http://localhost:8080/ai/{{userEmail}}
 
+###
+
+POST http://localhost:8080/profile/temporary/{{userEmail}}
+Content-Type: application/json
+
+{
+  "availableHours": 2,
+  "availableMinutes": 20,
+  "intention": "get better at math",
+  "focus": "learn more about machine learning"
+}
+
+###
+
+GET http://localhost:8080/profile/temporary/{{userEmail}}
