@@ -27,6 +27,13 @@ public class ProfileController {
         return ResponseEntity.ok().body(entity);
     }
 
+    @CrossOrigin(origins = "http://localhost:5173/")
+    @GetMapping("/temporary/exists/{userEmail}")
+    public Boolean verifyExistence(@PathVariable String userEmail) {
+
+        return this.temporaryProfileService.verifyProfileExistence(userEmail);
+    }
+
     @PostMapping("/temporary/{userEmail}")
     public ResponseEntity<Object> post(@PathVariable String userEmail,
                                        @RequestBody TemporaryProfileEntity temporaryProfileEntity) {

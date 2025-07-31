@@ -23,6 +23,8 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String username;
+
     @Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ ]+$\n")
     @NotNull
     private String name;

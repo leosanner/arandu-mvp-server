@@ -20,10 +20,10 @@ Content-Type: application/json
 {
   "day": 1,
   "month": 9,
-  "hour": 23,
+  "hour": 11,
   "minute": 50,
   "year": 2025,
-  "description": "Important Meeting migrations using JavaScrypt",
+  "description": "Important meeting about migrations using JavaScrypt",
   "name": "New AI tools",
   "userEmail": "leonardo@email.com"
 }
