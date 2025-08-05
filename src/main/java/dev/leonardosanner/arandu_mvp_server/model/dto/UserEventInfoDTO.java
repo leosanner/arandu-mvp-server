@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 public class UserEventInfoDTO {
 
     private String userEmail;
-    private String eventName;
-    private String eventDescription;
-    private String eventLabel;
-    private LocalDateTime eventStartDate;
-    private LocalDateTime eventEndDate;
+    private String name;
+    private String description;
+    private String label;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime createdAt;
 }

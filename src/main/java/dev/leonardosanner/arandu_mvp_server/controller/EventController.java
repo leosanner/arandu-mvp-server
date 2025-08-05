@@ -22,11 +22,12 @@ public class EventController {
         return this.eventService.createEvent(createEventDTO);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173/")
-    @GetMapping("/{userEmail}")
-    public ResponseEntity<Object> getUserEvents(@PathVariable String userEmail) {
-        List<UserEventInfoDTO> events = this.eventService.findUserEvents(userEmail);
+    @GetMapping("/")
+    public ResponseEntity<Object> getUserEvents(
+            @CookieValue(value = "token", defaultValue = "n_encontrado") String cookieValue
+    ) {
 
+        List<UserEventInfoDTO> events = this.eventService.findUserEvents(cookieValue);
         return ResponseEntity.ok().body(events);
     }
 }
