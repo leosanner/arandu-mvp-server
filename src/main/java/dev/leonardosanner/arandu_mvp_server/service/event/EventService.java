@@ -1,5 +1,6 @@
 package dev.leonardosanner.arandu_mvp_server.service.event;
 
+import dev.leonardosanner.arandu_mvp_server.model.dto.BasicResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.CreateEventDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserEventInfoDTO;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
@@ -24,10 +25,13 @@ public class EventService {
     @Autowired
     private FindUserEventsUseCase findUserEventsUseCase;
 
-    public ResponseEntity<Object> createEvent(CreateEventDTO createEventDTO) {
-        this.createEventUseCase.execute(createEventDTO);
+    public BasicResponseDTO createEvent(CreateEventDTO createEventDTO, String cookieValue) {
+        this.createEventUseCase.execute(createEventDTO, cookieValue);
 
-        return ResponseEntity.accepted().body("Event registered");
+        return BasicResponseDTO.builder()
+                .success(true)
+                .message("Event Created.")
+                .build();
     }
 
     public List<UserEventInfoDTO> findUserEvents(String cookies) {

@@ -12,11 +12,10 @@ public class CreateEventDTO {
     private String name;
     private String description;
 
-    private Integer day;
+    private Integer days;
     private Integer month;
-    private Integer year;
-    private Integer hour;
-    private Integer minute;
+    private Integer years;
+    private Integer hours;
+    private Integer minutes;
 
-    private String userEmail; // temporary
 }

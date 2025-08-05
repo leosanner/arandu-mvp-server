@@ -1,5 +1,6 @@
 package dev.leonardosanner.arandu_mvp_server.controller;
 
+import dev.leonardosanner.arandu_mvp_server.model.dto.BasicResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.CreateEventDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserEventInfoDTO;
 import dev.leonardosanner.arandu_mvp_server.service.event.EventService;
@@ -17,14 +18,18 @@ public class EventController {
     private EventService eventService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createEvent(@RequestBody CreateEventDTO createEventDTO) {
+    public ResponseEntity<Object> createEvent(
+            @CookieValue(value = "token") String cookieValue,
+            @RequestBody CreateEventDTO createEventDTO) {
 
-        return this.eventService.createEvent(createEventDTO);
+        BasicResponseDTO responseDTO = eventService.createEvent(createEventDTO, cookieValue);
+
+        return ResponseEntity.accepted().body(responseDTO);
     }
 
     @GetMapping("/")
     public ResponseEntity<Object> getUserEvents(
-            @CookieValue(value = "token", defaultValue = "n_encontrado") String cookieValue
+            @CookieValue(value = "token") String cookieValue
     ) {
 
         List<UserEventInfoDTO> events = this.eventService.findUserEvents(cookieValue);
