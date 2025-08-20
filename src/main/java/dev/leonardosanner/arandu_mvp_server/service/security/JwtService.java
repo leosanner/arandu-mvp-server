@@ -78,8 +78,6 @@ public class JwtService {
 
         String subject = jwsClaims.getBody().getSubject();
 
-        System.out.println(jwsClaims.getBody());
-        System.out.println(subject);
 
         return subject;
     }

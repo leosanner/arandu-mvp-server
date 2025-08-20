@@ -1,16 +1,13 @@
 package dev.leonardosanner.arandu_mvp_server.service.event;
 
-import dev.leonardosanner.arandu_mvp_server.model.dto.BasicResponseDTO;
-import dev.leonardosanner.arandu_mvp_server.model.dto.CreateEventDTO;
-import dev.leonardosanner.arandu_mvp_server.model.dto.UserEventInfoDTO;
+import dev.leonardosanner.arandu_mvp_server.model.dto.*;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
-import dev.leonardosanner.arandu_mvp_server.service.event.useCases.CreateEventUseCase;
-import dev.leonardosanner.arandu_mvp_server.service.event.useCases.FindUserEventsUseCase;
+import dev.leonardosanner.arandu_mvp_server.service.event.useCases.*;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.FindUserByCookieUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
 
 @Service
@@ -25,6 +22,19 @@ public class EventService {
     @Autowired
     private FindUserEventsUseCase findUserEventsUseCase;
 
+    @Autowired
+    private FindUserEventBySlugUseCase findUserEventBySlugUseCase;
+
+    @Autowired
+    private DeleteEventUseCase deleteEventUseCase;
+
+    @Autowired
+    private FindEventUseCase findEventUseCase;
+
+    @Autowired
+    private UpdateEventUseCase updateEventUseCase;
+
+
     public BasicResponseDTO createEvent(CreateEventDTO createEventDTO, String cookieValue) {
         this.createEventUseCase.execute(createEventDTO, cookieValue);
 
@@ -38,5 +48,26 @@ public class EventService {
         UserEntity userEntity = this.findUserByCookieUseCase.execute(cookies);
 
         return this.findUserEventsUseCase.execute(userEntity);
+    }
+
+    public BasicResponseDTO deleteEvent(DeleteEventDTO deleteEventDTO, String cookieValue) {
+        return this.deleteEventUseCase.execute(deleteEventDTO, cookieValue);
+    }
+
+    public UserEventInfoDTO findEvent(Long id, String cookieValue) {
+        return this.findEventUseCase.execute(id, cookieValue);
+    }
+
+    public BasicResponseDTO updateEvent(Long id,
+                                        String cookieValue,
+                                        UpdateEventDTO updateEventDTO) {
+
+        return this.updateEventUseCase.execute(id, cookieValue, updateEventDTO);
+    }
+
+    public List<UserEventInfoDTO> findUserEventsBySlug(String slug, String cookieValue)
+            throws ParseException {
+
+        return this.findUserEventBySlugUseCase.execute(slug, cookieValue);
     }
 }

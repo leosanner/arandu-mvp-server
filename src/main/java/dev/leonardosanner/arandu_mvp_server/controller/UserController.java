@@ -18,6 +18,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    // Create user
     @PostMapping("/")
     public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDTO createUserDTO){
 
@@ -31,10 +33,20 @@ public class UserController {
         return userService.userLoginWithJWT(userCredentialsDTO);
     }
 
+    // Log user and add cookies
     @PostMapping("/login")
     public ResponseEntity<Object> userLoginCookies(@Valid @RequestBody UserCredentialsDTO userCredentialsDTO,
                                                    HttpServletResponse response) {
 
         return this.userService.userLoginWithCookies(userCredentialsDTO, response);
     }
+
+
+    // CRUD
+
+    //Update
+
+
+    //Delete
+
 }

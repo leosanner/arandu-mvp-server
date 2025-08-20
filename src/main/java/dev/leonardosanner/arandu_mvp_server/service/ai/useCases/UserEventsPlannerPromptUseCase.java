@@ -1,7 +1,9 @@
 package dev.leonardosanner.arandu_mvp_server.service.ai.useCases;
 
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserEventInfoDTO;
+import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.service.event.useCases.FindUserEventsUseCase;
+import dev.leonardosanner.arandu_mvp_server.service.user.useCases.FindUserByCookieUseCase;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -14,13 +16,19 @@ import java.util.stream.Collectors;
 public class UserEventsPlannerPromptUseCase {
 
     private final FindUserEventsUseCase findUserEventsUseCase;
+    private final FindUserByCookieUseCase findUserByCookieUseCase;
 
-    public UserEventsPlannerPromptUseCase(FindUserEventsUseCase findUserEventsUseCase) {
+    public UserEventsPlannerPromptUseCase(FindUserEventsUseCase findUserEventsUseCase,
+                                          FindUserByCookieUseCase findUserByCookieUseCase) {
         this.findUserEventsUseCase = findUserEventsUseCase;
+        this.findUserByCookieUseCase = findUserByCookieUseCase;
     }
 
-    public HashMap<String, String> execute(String userEmail) {
-        List<UserEventInfoDTO> userEventsInformation = this.findUserEventsUseCase.execute(userEmail);
+    public HashMap<String, String> execute(String cookieValue) {
+
+        UserEntity userEntity = this.findUserByCookieUseCase.execute(cookieValue);
+
+        List<UserEventInfoDTO> userEventsInformation = this.findUserEventsUseCase.execute(userEntity.getEmail());
         HashMap<String, String> promptHash = new HashMap<>();
 
         if (userEventsInformation.isEmpty()) {
@@ -55,7 +63,7 @@ public class UserEventsPlannerPromptUseCase {
                 "Be a helpful guide, offering clear and practical advice tailored to each event.\n\n" +
                 "After providing the detailed plans for each event, give a concise summary highlighting the most important points " +
                 "the user should keep in mind overall and the timeline for each event.\n\n" +
-                "The language you should answer should be the same as the events are informed.\n\n" +
+                "You should answer in PORTUGUESE (pt-br).\n\n" +
                 "Here are the events:\n\n" +
                 promptUserInformation;
 

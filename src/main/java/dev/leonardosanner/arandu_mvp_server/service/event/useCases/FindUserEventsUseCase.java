@@ -36,6 +36,7 @@ public class FindUserEventsUseCase {
         return events.stream().map(
                 event -> {
                     return UserEventInfoDTO.builder()
+                            .id(event.getId())
                             .userEmail(user.getEmail())
                             .name(event.getName())
                             .description(event.getDescription())

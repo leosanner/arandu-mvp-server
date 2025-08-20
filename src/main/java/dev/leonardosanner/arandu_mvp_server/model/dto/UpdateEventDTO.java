@@ -1,24 +1,24 @@
 package dev.leonardosanner.arandu_mvp_server.model.dto;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UserEventInfoDTO {
+public class UpdateEventDTO {
 
-    private Long id;
-    private String userEmail;
     private String name;
     private String description;
-    private String label;
+//    private String label;
+
+    @FutureOrPresent
     private LocalDateTime startDate;
+
+    @Future
     private LocalDateTime endDate;
-    private LocalDateTime createdAt;
 }
+

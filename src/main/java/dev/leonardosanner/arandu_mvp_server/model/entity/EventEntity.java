@@ -26,7 +26,7 @@ public class EventEntity {
 
     private LocalDateTime eventEndDate;
 
-    @NotNull
+    @Column(unique = true, nullable = false)
     private String name;
 
     private String description;

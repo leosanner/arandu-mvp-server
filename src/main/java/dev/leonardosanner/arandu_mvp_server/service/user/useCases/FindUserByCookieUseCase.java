@@ -5,11 +5,9 @@ import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserJWTEntity;
 import dev.leonardosanner.arandu_mvp_server.repository.JwtUserRepository;
 import dev.leonardosanner.arandu_mvp_server.service.security.JwtService;
-import dev.leonardosanner.arandu_mvp_server.utils.CookiesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Service

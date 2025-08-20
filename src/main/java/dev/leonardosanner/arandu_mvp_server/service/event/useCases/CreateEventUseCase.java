@@ -1,5 +1,6 @@
 package dev.leonardosanner.arandu_mvp_server.service.event.useCases;
 
+import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.CronologicalException;
 import dev.leonardosanner.arandu_mvp_server.model.dto.CreateEventDTO;
 import dev.leonardosanner.arandu_mvp_server.model.entity.EventEntity;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 public class CreateEventUseCase {
 
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
     private final FindUserByCookieUseCase findUserByCookieUseCase;
 
     public CreateEventUseCase(EventRepository eventRepository,
@@ -22,7 +22,6 @@ public class CreateEventUseCase {
                               FindUserByCookieUseCase findUserByCookieUseCase) {
 
         this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
         this.findUserByCookieUseCase = findUserByCookieUseCase;
     }
 
@@ -42,6 +41,12 @@ public class CreateEventUseCase {
                 createEventDTO.getHours(),
                 createEventDTO.getMinutes()
         );
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (currentTime.isAfter(newEventStartDate)) {
+            throw new CronologicalException("O evento é anterior ao momento presente");
+        }
 
         EventEntity newEvent = EventEntity.builder()
                 .name(createEventDTO.getName())

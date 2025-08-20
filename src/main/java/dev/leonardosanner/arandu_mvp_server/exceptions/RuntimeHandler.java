@@ -1,5 +1,6 @@
 package dev.leonardosanner.arandu_mvp_server.exceptions;
 
+import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.CronologicalException;
 import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.InvalidUserCredentialsException;
 import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.UserAlreadyExistsException;
 import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.UserNotFoundException;
@@ -35,6 +36,13 @@ public class RuntimeHandler {
 
     @ExceptionHandler(InvalidUserCredentialsException.class)
     public ResponseEntity<Object> userNotFounded(InvalidUserCredentialsException e) {
+        return ResponseEntity.badRequest().body(
+                this.buildErrorResponse(e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(CronologicalException.class)
+    public ResponseEntity<Object> cronologicalSense(CronologicalException e) {
         return ResponseEntity.badRequest().body(
                 this.buildErrorResponse(e.getMessage())
         );
