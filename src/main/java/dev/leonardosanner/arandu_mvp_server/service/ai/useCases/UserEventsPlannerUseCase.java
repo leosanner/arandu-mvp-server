@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+@Deprecated
 @Service
 public class UserEventsPlannerUseCase {
 
