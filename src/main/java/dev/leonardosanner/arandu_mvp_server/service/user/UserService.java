@@ -38,7 +38,6 @@ public class UserService {
     }
 
 
-    // FIX: Until now, cookies are not working, see CORS, Server Proxy .... 03/08/2025
     public ResponseEntity<Object> userLoginWithCookies(UserCredentialsDTO userCredentialsDTO,
                                                        HttpServletResponse response){
 

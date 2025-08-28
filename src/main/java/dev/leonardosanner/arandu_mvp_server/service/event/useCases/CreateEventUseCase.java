@@ -1,12 +1,15 @@
 package dev.leonardosanner.arandu_mvp_server.service.event.useCases;
 
 import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.CronologicalException;
+import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.InvalidUserCredentialsException;
 import dev.leonardosanner.arandu_mvp_server.model.dto.CreateEventDTO;
 import dev.leonardosanner.arandu_mvp_server.model.entity.EventEntity;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.repository.EventRepository;
 import dev.leonardosanner.arandu_mvp_server.repository.UserRepository;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.FindUserByCookieUseCase;
+import org.apache.catalina.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,24 +18,18 @@ import java.time.LocalDateTime;
 public class CreateEventUseCase {
 
     private final EventRepository eventRepository;
-    private final FindUserByCookieUseCase findUserByCookieUseCase;
 
-    public CreateEventUseCase(EventRepository eventRepository,
-                              UserRepository userRepository,
-                              FindUserByCookieUseCase findUserByCookieUseCase) {
+    public CreateEventUseCase(EventRepository eventRepository) {
 
         this.eventRepository = eventRepository;
-        this.findUserByCookieUseCase = findUserByCookieUseCase;
     }
 
-    public void execute(CreateEventDTO createEventDTO, String cookieValue) {
+    public void execute(CreateEventDTO createEventDTO, UserEntity userEntity) {
         // TODO: Warn user if a event already exists in the given date
         // TODO: Add option to determine the end of the event "plus".
 
-        // check if user exists
         // TODO: In future steps, user will be authenticated -> use auth userUseCase
 
-        UserEntity userEntity = this.findUserByCookieUseCase.execute(cookieValue);
 
         LocalDateTime newEventStartDate = LocalDateTime.of(
                 createEventDTO.getYears(),

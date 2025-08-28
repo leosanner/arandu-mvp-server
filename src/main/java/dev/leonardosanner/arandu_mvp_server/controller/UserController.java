@@ -20,6 +20,8 @@ public class UserController {
 
 
     // Create user
+    // TODO: When user created -> call this.userLoginWithCookies
+
     @PostMapping("/")
     public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDTO createUserDTO){
 

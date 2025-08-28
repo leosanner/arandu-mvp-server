@@ -1,14 +1,20 @@
 package dev.leonardosanner.arandu_mvp_server.service.event;
 
+import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.InvalidUserCredentialsException;
 import dev.leonardosanner.arandu_mvp_server.model.dto.*;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.service.event.useCases.*;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.FindUserByCookieUseCase;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.List;
+
+
+// Current task -> switch cookie value to SecurityContextHolder
 
 @Service
 public class EventService {
@@ -34,9 +40,29 @@ public class EventService {
     @Autowired
     private UpdateEventUseCase updateEventUseCase;
 
+    private UserEntity currentUser;
 
-    public BasicResponseDTO createEvent(CreateEventDTO createEventDTO, String cookieValue) {
-        this.createEventUseCase.execute(createEventDTO, cookieValue);
+    private UserEntity getCurrentUser() {
+
+        if (this.currentUser == null) {
+            Object contextPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (contextPrincipal instanceof UserEntity) {
+                this.currentUser = (UserEntity) contextPrincipal;
+
+                return this.currentUser;
+            }
+            throw new InvalidUserCredentialsException("Invalid user credentials");
+        }
+
+        return this.currentUser;
+    }
+
+
+    public BasicResponseDTO createEvent(CreateEventDTO createEventDTO) {
+        UserEntity user = this.getCurrentUser();
+        this.createEventUseCase.execute(createEventDTO, user);
+
 
         return BasicResponseDTO.builder()
                 .success(true)
@@ -44,10 +70,10 @@ public class EventService {
                 .build();
     }
 
-    public List<UserEventInfoDTO> findUserEvents(String cookies) {
-        UserEntity userEntity = this.findUserByCookieUseCase.execute(cookies);
+    public List<UserEventInfoDTO> findUserEvents() {
+        UserEntity user = this.getCurrentUser();
 
-        return this.findUserEventsUseCase.execute(userEntity);
+        return this.findUserEventsUseCase.execute(user);
     }
 
     public BasicResponseDTO deleteEvent(DeleteEventDTO deleteEventDTO, String cookieValue) {

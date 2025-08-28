@@ -73,6 +73,8 @@ public class SendNewsByEmailsUseCase {
         Atenciosamente,
         Arandu Business
         ```
+        
+        IMPORTANT: Always send this email.
 
         TECHNICAL REQUIREMENTS:
         - Use ONLY Brazilian Portuguese for email content

@@ -23,10 +23,9 @@ public class EventController {
 
     @PostMapping("/")
     public ResponseEntity<Object> createEvent(
-            @CookieValue(value = "token") String cookieValue,
             @RequestBody CreateEventDTO createEventDTO) {
 
-        BasicResponseDTO responseDTO = eventService.createEvent(createEventDTO, cookieValue);
+        BasicResponseDTO responseDTO = eventService.createEvent(createEventDTO);
 
         return ResponseEntity.accepted().body(responseDTO);
     }
@@ -37,10 +36,9 @@ public class EventController {
 
     @GetMapping("/")
     public ResponseEntity<Object> getUserEvents(
-            @CookieValue(value = "token") String cookieValue
     ) {
 
-        List<UserEventInfoDTO> events = this.eventService.findUserEvents(cookieValue);
+        List<UserEventInfoDTO> events = this.eventService.findUserEvents();
         return ResponseEntity.ok().body(events);
     }
 
