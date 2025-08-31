@@ -4,6 +4,7 @@ import dev.leonardosanner.arandu_mvp_server.model.dto.BasicResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.CreateUserDTO;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -11,14 +12,15 @@ import org.springframework.stereotype.Service;
 public class CreateUserUseCase {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public CreateUserUseCase(UserRepository userRepository){
+
+    public CreateUserUseCase(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public BasicResponseDTO execute(CreateUserDTO createUserDTO){
-
-    // Verify if username or email already exists.
 
         if (userRepository.findByEmail(createUserDTO.getEmail()).isPresent() ||
                 userRepository.findByUsername(createUserDTO.getUsername()).isPresent()) {
@@ -31,10 +33,12 @@ public class CreateUserUseCase {
 
         String fullName = createUserDTO.getFirstName() + " " + createUserDTO.getLastName();
 
+        String encpryptPassword = passwordEncoder.encode(createUserDTO.getPassword());
+
         UserEntity newUser = UserEntity.builder()
                 .name(fullName)
                 .username(createUserDTO.getUsername())
-                .password(createUserDTO.getPassword())
+                .password(encpryptPassword)
                 .email(createUserDTO.getEmail())
                 .build();
 

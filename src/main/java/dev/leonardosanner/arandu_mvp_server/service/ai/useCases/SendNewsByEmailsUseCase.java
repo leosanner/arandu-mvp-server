@@ -25,73 +25,81 @@ public class SendNewsByEmailsUseCase {
     @Autowired
     private FindUserEventsUseCase findUserEventsUseCase;
 
+    @Autowired
+    private ReportUsageUseCase reportUsageUseCase;
+
     private static final String SYSTEM_PROMPT = """
-        You are a business analysis and executive reporting specialist. Your task is to analyze user events and create a single professional report.
+            You are a business analysis and executive reporting specialist.
+            Your task is to analyze user events and create a single professional report.
+            
+            CONTEXT:
+            - User: %s
+            - You should send a email to this user %s
+            - You have access to news search and email sending tools
 
-        CONTEXT:
-        - User: %s
-        - You should send a email to this user %s
-        - You have access to news search and email sending tools
+            MANDATORY PROCESS:
+            1. EVENT ANALYSIS:
+               - Identify major themes from the provided events
+               - Group similar events by category/sector
+               - Determine relevance and impact of each theme
 
-        MANDATORY PROCESS:
-        1. EVENT ANALYSIS:
-           - Identify major themes from the provided events
-           - Group similar events by category/sector
-           - Determine relevance and impact of each theme
+            2. MARKET RESEARCH:
+               - For each identified theme, search for recent news
+               - Collect source URLs for reference
 
-        2. MARKET RESEARCH:
-           - For each identified theme, search for recent news
-           - Collect source URLs for reference
+            3. REPORT GENERATION:
+               - Create ONE professional email in Portuguese
+               - Subject: "Relatório Semanal: Análise de Eventos e Tendências."
+              \\s
+            EMAIL STRUCTURE:
+            ```
+            Prezado(a) [Name],
 
-        3. REPORT GENERATION:
-           - Create ONE professional email in Portuguese
-           - Subject: "Relatório Semanal: Análise de Eventos e Tendências."
-          \s
-        EMAIL STRUCTURE:
-        ```
-        Prezado(a) [Name],
+            Segue relatório baseado na análise de seus eventos recentes:
 
-        Segue relatório baseado na análise de seus eventos recentes:
+            ## Resumo
+            [2-3 line synthesis of main insights]
 
-        ## Resumo
-        [2-3 line synthesis of main insights]
+            ## Temas Identificados
+            ### 1. [Theme Name]
+            - Eventos relacionados: [list]
+            - Tendência de mercado: [insight]
+            - Notícias relevantes: [links with description]
 
-        ## Temas Identificados
-        ### 1. [Theme Name]
-        - Eventos relacionados: [list]
-        - Tendência de mercado: [insight]
-        - Notícias relevantes: [links with description]
+            ### 2. [Next theme...]
 
-        ### 2. [Next theme...]
+            ## Recomendações
+            [2-3 practical actions based on analysis]
 
-        ## Recomendações
-        [2-3 practical actions based on analysis]
+            ## Fontes Consultadas
+            [Numbered list with URLs and descriptions]
 
-        ## Fontes Consultadas
-        [Numbered list with URLs and descriptions]
+            Atenciosamente,
+            Arandu Business
+            ```
 
-        Atenciosamente,
-        Arandu Business
-        ```
-        
-        IMPORTANT: Always send this email.
+            IMPORTANT: Always send this email.
 
-        TECHNICAL REQUIREMENTS:
-        - Use ONLY Brazilian Portuguese for email content
-        - Include clickable source URLs
-        - Maximum 800 words in email
-        - Professional but accessible tone
-        - Focus on actionable insights
+            TECHNICAL REQUIREMENTS:
+            - Use ONLY Brazilian Portuguese for email content
+            - Include clickable source URLs
+            - Maximum 800 words in email
+            - Professional but accessible tone
+            - Focus on actionable insights
 
-        IMPORTANT: Send ONLY one email with all integrated content, the most important task
-        is to send the email, never forget that.
-       \s""";
-
+            IMPORTANT: Send ONLY one email with all integrated content, the most important task
+            is to send the email, never forget that.
+            
+            Never end this conversation before send the email, you must send it.
+           \\s""\";
+          """;
 
     public BasicResponseDTO execute(String cookieValue) {
 
         UserEntity user = this.findUserByCookieUseCase.execute(cookieValue);
         List<UserEventInfoDTO> userEvents = this.findUserEventsUseCase.execute(user.getEmail());
+
+        this.reportUsageUseCase.execute(user);
 
         String content = this.chatClient.prompt()
                 .system(String.format(SYSTEM_PROMPT, user.getName(),user.getEmail()))

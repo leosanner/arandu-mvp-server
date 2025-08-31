@@ -9,6 +9,8 @@ import dev.leonardosanner.arandu_mvp_server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +33,7 @@ public class FindUserEventsUseCase {
                 () -> new UserNotFoundException("User not found.")
         );
 
-        List<EventEntity> events = this.eventRepository.findByUser(user);
+        List<EventEntity> events = this.findValidUserEvents(user);
 
         return events.stream().map(
                 event -> {
@@ -47,5 +49,22 @@ public class FindUserEventsUseCase {
                             .build();
                 }
         ).collect(Collectors.toList());
+    }
+
+    private List<EventEntity> findValidUserEvents(UserEntity user) {
+        List<EventEntity> events = this.eventRepository.findByUser(user);
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        for (int i = events.size()-1; i>=0; i--) {
+
+            var currentEvent = events.get(i);
+
+            if (currentEvent.getEventStartDate().isBefore(localDateTime)) {
+                this.eventRepository.delete(currentEvent);
+                events.remove(i);
+            }
+        }
+
+        return events;
     }
 }

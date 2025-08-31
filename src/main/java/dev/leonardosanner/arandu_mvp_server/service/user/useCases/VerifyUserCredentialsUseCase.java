@@ -2,11 +2,11 @@ package dev.leonardosanner.arandu_mvp_server.service.user.useCases;
 
 import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.InvalidUserCredentialsException;
 import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.UserNotFoundException;
-import dev.leonardosanner.arandu_mvp_server.model.dto.BasicResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserCredentialsDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserValidationResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -14,9 +14,13 @@ import org.springframework.stereotype.Service;
 public class VerifyUserCredentialsUseCase {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public VerifyUserCredentialsUseCase(UserRepository userRepository) {
+    public VerifyUserCredentialsUseCase(UserRepository userRepository,
+                                        PasswordEncoder passwordEncoder) {
+
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserValidationResponseDTO execute(UserCredentialsDTO userCredentialsDTO) {
@@ -26,7 +30,7 @@ public class VerifyUserCredentialsUseCase {
                 );
 
         //TODO: encrypt passwords
-        boolean passwordMatches = userEntity.getPassword().equals(userCredentialsDTO.getPassword());
+        boolean passwordMatches = passwordEncoder.matches(userCredentialsDTO.getPassword(), userEntity.getPassword());
 
         if (!passwordMatches) {
 

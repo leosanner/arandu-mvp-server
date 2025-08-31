@@ -13,7 +13,7 @@ public interface EventUpdateMapper {
 //            @Mapping(target = "name", conditionQualifiedByName = "notBlank"),
 //            @Mapping(target = "description", conditionQualifiedByName = "notBlank"),
 //
-//    })
+//    })ch
     void updateEvent(UpdateEventDTO updateEventDTO,
                      @MappingTarget EventEntity eventEntity);
 
