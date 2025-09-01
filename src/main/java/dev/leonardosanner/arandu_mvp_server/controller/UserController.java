@@ -18,7 +18,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     // Create user
     // TODO: When user created -> call this.userLoginWithCookies
 
@@ -28,6 +27,7 @@ public class UserController {
         return userService.createUser(createUserDTO);
     }
 
+    @Deprecated
     @PostMapping("/login/jwt")
     public ResponseEntity<LoginUserJWTResponseDTO> userLoginJWT(
             @Valid @RequestBody UserCredentialsDTO userCredentialsDTO) {

@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private FindUserByCookieUseCase findUserByCookieUseCase;
+
+    @Value("${security.cookies.token.name}")
+    private String tokenName;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -71,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (cookies != null) {
             for (Cookie cookie: cookies) {
-                if ("token".equals(cookie.getName())) {
+                if (tokenName.equals(cookie.getName())) {
                     return cookie.getValue();
                 }
 

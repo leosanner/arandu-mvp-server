@@ -42,7 +42,7 @@ public class RuntimeHandler {
     }
 
     @ExceptionHandler(CronologicalException.class)
-    public ResponseEntity<Object> cronologicalSense(CronologicalException e) {
+    public ResponseEntity<Object> chronologicalSense(CronologicalException e) {
         return ResponseEntity.badRequest().body(
                 this.buildErrorResponse(e.getMessage())
         );

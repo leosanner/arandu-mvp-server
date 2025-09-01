@@ -33,12 +33,12 @@ public class CreateUserUseCase {
 
         String fullName = createUserDTO.getFirstName() + " " + createUserDTO.getLastName();
 
-        String encpryptPassword = passwordEncoder.encode(createUserDTO.getPassword());
+        String encryptPassword = passwordEncoder.encode(createUserDTO.getPassword());
 
         UserEntity newUser = UserEntity.builder()
                 .name(fullName)
                 .username(createUserDTO.getUsername())
-                .password(encpryptPassword)
+                .password(encryptPassword)
                 .email(createUserDTO.getEmail())
                 .build();
 
