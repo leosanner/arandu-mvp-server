@@ -29,7 +29,6 @@ public class VerifyUserCredentialsUseCase {
                         () -> new UserNotFoundException("User not founded.")
                 );
 
-        //TODO: encrypt passwords
         boolean passwordMatches = passwordEncoder.matches(userCredentialsDTO.getPassword(), userEntity.getPassword());
 
         if (!passwordMatches) {

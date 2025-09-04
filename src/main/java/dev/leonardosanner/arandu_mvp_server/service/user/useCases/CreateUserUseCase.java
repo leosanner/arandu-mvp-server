@@ -27,7 +27,7 @@ public class CreateUserUseCase {
 
             return BasicResponseDTO.builder()
                     .success(false)
-                    .message("account already exists")
+                    .message("Account already exists")
                     .build();
         }
 

@@ -14,6 +14,7 @@ public class AIController {
     @Autowired
     private AIService aiService;
 
+    @Deprecated
     @GetMapping("/")
     public ResponseEntity<AiPlanResponseDTO> planEvents(
             @CookieValue(value = "token") String cookieValue) {
@@ -25,9 +26,8 @@ public class AIController {
 
     @GetMapping("/news-api")
     public ResponseEntity<BasicResponseDTO> newsEmail(
-            @CookieValue(value = "token") String cookieValue
     ) {
-        BasicResponseDTO responseDTO = this.aiService.sendEmail(cookieValue);
+        BasicResponseDTO responseDTO = this.aiService.sendEmail();
 
         return ResponseEntity.ok().body(responseDTO);
     }

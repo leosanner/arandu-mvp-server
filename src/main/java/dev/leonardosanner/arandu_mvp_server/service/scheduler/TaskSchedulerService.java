@@ -1,76 +1,45 @@
 package dev.leonardosanner.arandu_mvp_server.service.scheduler;
 
 import dev.leonardosanner.arandu_mvp_server.model.entity.AiUsageEntity;
-import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
-import dev.leonardosanner.arandu_mvp_server.model.entity.UserJWTEntity;
 import dev.leonardosanner.arandu_mvp_server.repository.AiUsageRepository;
-import dev.leonardosanner.arandu_mvp_server.repository.JwtUserRepository;
+import dev.leonardosanner.arandu_mvp_server.service.ai.threads.NewsApiThread;
+import dev.leonardosanner.arandu_mvp_server.service.ai.threads.NewsThreadsManager;
+import dev.leonardosanner.arandu_mvp_server.service.scheduler.useCases.SchedulerUsages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
 public class TaskSchedulerService {
 
-    @Autowired
-    private JwtUserRepository jwtUserRepository;
+    private final NewsThreadsManager newsThreadsManager;
+    private final SchedulerUsages schedulerUsages;
 
-    @Autowired
-    private AiUsageRepository aiUsageRepository;
+    public TaskSchedulerService(NewsThreadsManager newsThreadsManager,
+                                SchedulerUsages schedulerUsages) {
 
-    @Value("${ai.usage.credits}")
-    private Integer creditAmount;
+        this.newsThreadsManager = newsThreadsManager;
+        this.schedulerUsages = schedulerUsages;
+    }
 
-    private List<UserEntity> activeUsers;
-
-//    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)
-//    public List<UserEntity> getActiveUsers() {
-//
-//        System.out.println("Getting all the active users");
-//
-//        List<UserJWTEntity> entries = jwtUserRepository.findAll();
-//
-//        var setEntries =  entries
-//                .stream()
-//                .map(UserJWTEntity::getUser)
-//                .distinct()
-//                .collect(Collectors.toList());
-//
-//        System.out.println(setEntries);
-//
-//        return setEntries;
-//    };
 
     @Scheduled(fixedRate = 5000 * 60)
     public void clearPreviousUsage() {
-
-        List<UserJWTEntity> allEntries =  jwtUserRepository.findAll();
-
-        if (allEntries.isEmpty()) {
-            return;
-        }
-
-        for (UserJWTEntity entry : allEntries) {
-            var currentTime = Instant.now();
-
-            if (currentTime.isAfter(entry.getExpirationDate())) {
-
-                jwtUserRepository.delete(entry);
-            }
-        }
-    };
+        this.schedulerUsages.clearPrevUsage();
+    }
 
     @Scheduled(fixedRate = 1000*60*60*24*3)
     public void resetAiRequests() {
-        List<AiUsageEntity> allUsersUsage = this.aiUsageRepository.findAll();
+        this.schedulerUsages.resetRequests();
+    }
 
-        for (AiUsageEntity entity : allUsersUsage) {
-            entity.setCredits(creditAmount);
-            this.aiUsageRepository.save(entity);
-        }
+//    @Scheduled(fixedRateString = "${SEND_EMAILS_SCHEDULER_TIME}")
+
+    @Scheduled(fixedRate = 1000 * 60 * 5)
+    public void sendNews() {
+       this.newsThreadsManager.executeThreads();
     }
 }

@@ -41,6 +41,5 @@ public class CookiesHandler {
         ResponseCookie cookie =  this.generateCookie(userEmail);
 
         response.addHeader("Set-Cookie", cookie.toString());
-        System.out.println("Cookie enviado: " + cookie.toString());
     }
 }

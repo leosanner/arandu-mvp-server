@@ -5,6 +5,7 @@ import dev.leonardosanner.arandu_mvp_server.model.dto.UserEventInfoDTO;
 import dev.leonardosanner.arandu_mvp_server.model.entity.EventEntity;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.repository.EventRepository;
+import dev.leonardosanner.arandu_mvp_server.service.user.UserService;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.FindUserByCookieUseCase;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +13,20 @@ import org.springframework.stereotype.Service;
 public class FindEventUseCase {
 
     private final EventRepository eventRepository;
-    private final FindUserByCookieUseCase findUserByCookieUseCase;
+    private final UserService userService;
 
     public FindEventUseCase(EventRepository eventRepository,
-                            FindUserByCookieUseCase findUserByCookieUseCase) {
+                            UserService userService) {
 
         this.eventRepository = eventRepository;
-        this.findUserByCookieUseCase = findUserByCookieUseCase;
+        this.userService = userService;
     }
 
+    public UserEventInfoDTO execute(Long id) {
 
-    public UserEventInfoDTO execute(Long id, String cookieValue) {
+        UserEntity user = this.userService.getCurrentUser();
 
-        UserEntity userEntity = this.findUserByCookieUseCase.execute(cookieValue);
-        EventEntity eventEntity = this.eventRepository.findByIdAndUser(id, userEntity).orElseThrow(
+        EventEntity eventEntity = this.eventRepository.findByIdAndUser(id, user).orElseThrow(
                 () -> new EventNotFoundException("Event not found.")
         );
 

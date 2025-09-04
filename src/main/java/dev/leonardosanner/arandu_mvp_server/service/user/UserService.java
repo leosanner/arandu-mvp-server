@@ -1,9 +1,11 @@
 package dev.leonardosanner.arandu_mvp_server.service.user;
 
+import dev.leonardosanner.arandu_mvp_server.exceptions.exceptionClasses.InvalidUserCredentialsException;
 import dev.leonardosanner.arandu_mvp_server.model.dto.BasicResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.CreateUserDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.LoginUserJWTResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserCredentialsDTO;
+import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.CreateUserUseCase;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.LoginUserWithCookiesUseCase;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.LoginUserWithJWTUseCase;
@@ -11,6 +13,7 @@ import dev.leonardosanner.arandu_mvp_server.service.user.useCases.VerifyUserCred
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -21,13 +24,28 @@ public class UserService {
     private CreateUserUseCase createUserUseCase;
 
     @Autowired
-    private VerifyUserCredentialsUseCase verifyUserCredentialsUseCase;
-
-    @Autowired
     private LoginUserWithCookiesUseCase loginUserWithCookiesUseCase;
 
     @Autowired
     private LoginUserWithJWTUseCase loginUserWithJWTUseCase;
+
+    private UserEntity currentUser;
+
+    public UserEntity getCurrentUser() {
+
+        if (this.currentUser == null) {
+            Object contextPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (contextPrincipal instanceof UserEntity) {
+                this.currentUser = (UserEntity) contextPrincipal;
+
+                return this.currentUser;
+            }
+            throw new InvalidUserCredentialsException("Invalid user credentials");
+        }
+
+        return this.currentUser;
+    }
 
 
     // Create User if email and username do not exist in the DB.

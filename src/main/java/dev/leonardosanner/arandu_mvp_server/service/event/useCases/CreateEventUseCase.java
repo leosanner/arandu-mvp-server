@@ -42,7 +42,7 @@ public class CreateEventUseCase {
         LocalDateTime currentTime = LocalDateTime.now();
 
         if (currentTime.isAfter(newEventStartDate)) {
-            throw new CronologicalException("O evento é anterior ao momento presente");
+            throw new CronologicalException("The event is before the current moment.");
         }
 
         EventEntity newEvent = EventEntity.builder()

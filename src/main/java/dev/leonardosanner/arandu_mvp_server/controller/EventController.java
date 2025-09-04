@@ -58,18 +58,14 @@ public class EventController {
     // Delete
 
     @DeleteMapping("/delete")
-    public ResponseEntity<BasicResponseDTO> deleteEvent(
-            @CookieValue(value = "token") String cookieValue
-            ,@RequestBody DeleteEventDTO deleteEventDTO) {
+    public ResponseEntity<BasicResponseDTO> deleteEvent(@RequestBody DeleteEventDTO deleteEventDTO) {
 
-
-        BasicResponseDTO responseDTO =  this.eventService.deleteEvent(deleteEventDTO, cookieValue);
+        BasicResponseDTO responseDTO =  this.eventService.deleteEvent(deleteEventDTO);
 
         return ResponseEntity.ok().body(responseDTO);
     }
 
     // Update
-
     @PatchMapping("/{id}")
     public ResponseEntity<BasicResponseDTO> updateEvent(
             @RequestParam Long id,

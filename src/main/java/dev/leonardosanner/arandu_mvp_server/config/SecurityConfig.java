@@ -1,6 +1,7 @@
 package dev.leonardosanner.arandu_mvp_server.config;
 
 import dev.leonardosanner.arandu_mvp_server.security.JwtFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,10 +16,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-     private final String[] allowedRoots = {"/user/login", "/user/"};
+    @Value("${ALLOWED_ROOTS}")
+    private String roots;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, JwtFilter jwtFilter) throws Exception {
+        String[] allowedRoots = this.roots.split(";");
 
         return httpSecurity
                 .csrf(csrf-> csrf.disable())

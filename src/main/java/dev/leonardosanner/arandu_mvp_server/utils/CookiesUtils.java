@@ -3,6 +3,7 @@ package dev.leonardosanner.arandu_mvp_server.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class CookiesUtils {
 
     public static Map<String, Object> turnCookieInObject(String cookie) {

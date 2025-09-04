@@ -27,8 +27,6 @@ public class ReportUsageUseCase {
                 () -> this.createUsageEntity(user)
         );
 
-        System.out.println(usageEntity);
-
         if (usageEntity.getCredits() - 1 < 0) {
             throw new RuntimeException("Reached the amount of credits: " + creditAmount);
         }

@@ -13,20 +13,15 @@ import org.springframework.stereotype.Service;
 public class DeleteEventUseCase {
 
     private final EventRepository eventRepository;
-    private final FindUserByCookieUseCase findUserByCookieUseCase;
 
-    public DeleteEventUseCase(EventRepository eventRepository,
-                              FindUserByCookieUseCase findUserByCookieUseCase) {
+    public DeleteEventUseCase(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
-        this.findUserByCookieUseCase = findUserByCookieUseCase;
     }
 
-    public BasicResponseDTO execute(DeleteEventDTO deleteEventDTO, String cookieValue) {
-
-        UserEntity userEntity = this.findUserByCookieUseCase.execute(cookieValue);
+    public BasicResponseDTO execute(DeleteEventDTO deleteEventDTO, UserEntity user) {
 
         EventEntity eventEntity = this.eventRepository.findByIdAndUser(deleteEventDTO.getId(),
-                userEntity
+                user
                 ).orElseThrow(
                 () -> new EventNotFoundException("Event not found.")
         );

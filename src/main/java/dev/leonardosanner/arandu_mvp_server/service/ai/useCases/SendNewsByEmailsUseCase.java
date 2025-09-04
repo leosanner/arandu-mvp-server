@@ -2,11 +2,13 @@ package dev.leonardosanner.arandu_mvp_server.service.ai.useCases;
 
 import dev.leonardosanner.arandu_mvp_server.model.dto.BasicResponseDTO;
 import dev.leonardosanner.arandu_mvp_server.model.dto.UserEventInfoDTO;
+import dev.leonardosanner.arandu_mvp_server.model.entity.EventEntity;
 import dev.leonardosanner.arandu_mvp_server.model.entity.UserEntity;
 import dev.leonardosanner.arandu_mvp_server.service.event.useCases.FindUserEventsUseCase;
 import dev.leonardosanner.arandu_mvp_server.service.user.useCases.FindUserByCookieUseCase;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -16,11 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class SendNewsByEmailsUseCase {
 
-    @Autowired
-    private ChatClient chatClient;
+    @Value("${ARANDU_EMAIL}")
+    private String email;
+
+    @Value("${ARANDU_APP_PASSWORD}")
+    private String password;
 
     @Autowired
-    private FindUserByCookieUseCase findUserByCookieUseCase;
+    private ChatClient chatClient;
 
     @Autowired
     private FindUserEventsUseCase findUserEventsUseCase;
@@ -50,7 +55,7 @@ public class SendNewsByEmailsUseCase {
             3. REPORT GENERATION:
                - Create ONE professional email in Portuguese
                - Subject: "Relatório Semanal: Análise de Eventos e Tendências."
-              \\s
+         
             EMAIL STRUCTURE:
             ```
             Prezado(a) [Name],
@@ -91,13 +96,9 @@ public class SendNewsByEmailsUseCase {
             is to send the email, never forget that.
             
             Never end this conversation before send the email, you must send it.
-           \\s""\";
           """;
 
-    public BasicResponseDTO execute(String cookieValue) {
-
-        UserEntity user = this.findUserByCookieUseCase.execute(cookieValue);
-        List<UserEventInfoDTO> userEvents = this.findUserEventsUseCase.execute(user.getEmail());
+    public BasicResponseDTO execute(UserEntity user, List<EventEntity> userEvents) {
 
         this.reportUsageUseCase.execute(user);
 
@@ -116,7 +117,7 @@ public class SendNewsByEmailsUseCase {
                 .build();
     }
 
-    private String formatEventToString(UserEventInfoDTO eventInfoDTO) {
+    private String formatEventToString(EventEntity userEvent) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         String template =  """
@@ -126,8 +127,8 @@ public class SendNewsByEmailsUseCase {
                 """;
 
         return String.format(template,
-                eventInfoDTO.getStartDate().format(formatter),
-                eventInfoDTO.getName(),
-                eventInfoDTO.getDescription());
+                userEvent.getEventStartDate().format(formatter),
+                userEvent.getName(),
+                userEvent.getDescription());
     }
 }
